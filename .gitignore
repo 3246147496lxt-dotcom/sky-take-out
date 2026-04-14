@@ -1,6 +1,45 @@
+# ==========================
+# 苍穹外卖 专属 .gitignore（安全版）
+# ==========================
+
+# 🔴 1. 敏感配置文件（数据库密码、JWT秘钥、第三方密钥等，绝对不能上传）
+**/application-dev.yml
+**/application-prod.yml
+**/application-local.yml
+**/bootstrap.yml
+**/bootstrap-dev.yml
+**/*.properties
+**/*.env
+**/*.env.local
+
+# 🟡 2. 编译/日志/临时文件
 **/target/
-.idea
+**/logs/
+**/*.log
+**/*.tmp
+**/*.temp
+**/release.properties
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+
+# 🟢 3. IDE/编辑器配置文件
+.idea/
 *.iml
-*.class
-*Test.java
+*.iws
+*.ipr
+.vscode/
+.DS_Store
+*.swp
+*.bak
+
+# 🔵 4. 本地密钥/证书文件
+*.key
+*.pem
+*.p12
+*.jks
+secret/
+secrets/
+
+# 🟣 5. 测试/本地环境文件
 **/test/
+*Test.java
