@@ -93,4 +93,33 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 启用、禁用员工账号
+     */
+    @PostMapping("/status/{status}")
+    public Result startOrStop(@PathVariable Integer status, Long id){
+        log.info("启用禁用的员工id:{},更改员工状态:{}",id,status);
+        employeeService.startOrStop(status,id);
+        return Result.success();
+    }
+
+    /**
+     * 根据id查询员工
+     */
+    @GetMapping("/{id}")
+    public Result queryById(@PathVariable Long id){
+        log.info("根据id查询员工:{}", id);
+        Employee employee = employeeService.queryById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 编辑员工信息
+     */
+    @PutMapping
+    public Result editById(@RequestBody EmployeeDTO employeeDTO){
+        log.info("编辑员工信息：{}",employeeDTO);
+        employeeService.editById(employeeDTO);
+        return Result.success();
+    }
 }

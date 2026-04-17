@@ -26,5 +26,31 @@ public interface EmployeeMapper {
             "(#{name}, #{username}, #{password}, #{phone}, #{sex}, #{idNumber}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, #{status})")
     void insert(Employee employee);
 
+    /**
+     * 分页查询
+     * @param name
+     * @return
+     */
     Page<Employee> pageQuery(String name);
+
+    /**
+     * 启用禁用员工账号
+     * @param employee
+     */
+    void update(Employee employee);
+
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    @Select("select id, name, username, password, phone, sex, id_number, create_time, update_time, create_user, update_user, status" +
+            " from employee where id = #{id}")
+    Employee selectById(Long id);
+
+    /**
+     * 编辑员工信息
+     * @param employee
+     */
+    void updateById(Employee employee);
 }
