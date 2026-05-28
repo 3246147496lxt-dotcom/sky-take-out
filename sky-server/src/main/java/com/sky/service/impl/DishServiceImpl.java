@@ -98,10 +98,15 @@ public class DishServiceImpl implements com.sky.service.DishService {
         }
 
         //删除菜品表中的菜品数据
-        for (Long id : ids) {
-            dishMapper.deleteById(id);
-            //删除口味表中的口味数据
-            dishFlavorMapper.deleteByDishId(id);
-        }
+//        for (Long id : ids) {
+//            dishMapper.deleteById(id);
+//            //删除口味表中的口味数据
+//            dishFlavorMapper.deleteByDishId(id);
+//        }
+
+        //批量删除菜品数据
+        dishMapper.deleteByIds(ids);
+        //批量删除菜品id对应的口味表中的数据
+        dishFlavorMapper.deleteByDishIds(ids);
     }
 }
