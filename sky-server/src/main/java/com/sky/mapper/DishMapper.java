@@ -6,11 +6,9 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -80,4 +78,10 @@ public interface DishMapper {
      */
     @Select("select a.* from dish a left join setmeal_dish b on a.id = b.dish_id where b.setmeal_id = #{setmealId}")
     List<Dish> getBySetmealId(Long setmealId);
+
+    /**
+     * 菜品的起售停售
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void startOrStop(Dish dish);
 }

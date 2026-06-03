@@ -41,6 +41,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
 
     /**
      * 新增菜品和对应口味
+     *
      * @param dishDTO
      */
     @Override
@@ -48,7 +49,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
 
         Dish dish = new Dish();
 
-        BeanUtils.copyProperties(dishDTO,dish);
+        BeanUtils.copyProperties(dishDTO, dish);
 
         //向菜品表插入一条数据
         dishMapper.insert(dish);
@@ -57,7 +58,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
         Long dishId = dish.getId();
 
         List<DishFlavor> flavors = dishDTO.getFlavors();
-        if(flavors != null && flavors.size() >0){
+        if (flavors != null && flavors.size() > 0) {
             flavors.forEach(dishFlavor -> {
                 dishFlavor.setDishId(dishId);
             });
@@ -69,6 +70,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
 
     /**
      * 实现分页查询
+     *
      * @param dishPageQueryDTO
      * @return
      */
@@ -76,19 +78,20 @@ public class DishServiceImpl implements com.sky.service.DishService {
     public PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO) {
         PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
         Page<DishVO> page = dishMapper.pageQuery(dishPageQueryDTO);
-        return new PageResult(page.getTotal(),page.getResult());
+        return new PageResult(page.getTotal(), page.getResult());
     }
 
     /**
      * 菜品批量删除
+     *
      * @param ids
      */
     @Transactional
     public void deleteDish(List<Long> ids) {
         //判断当前菜品是否能被删除--是否存在起售中的菜品？？
-        for(Long id : ids){
+        for (Long id : ids) {
             Dish dish = dishMapper.getById(id);
-            if(dish.getStatus() == StatusConstant.ENABLE){
+            if (dish.getStatus() == StatusConstant.ENABLE) {
                 //当前菜品处于起售中，不能删除
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }
@@ -96,7 +99,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
 
         //判断当前菜品是否能被删除--是否被套餐关联了？？
         List<Long> setmealIds = setmealDishMapper.getsetmealIdsByDishIds(ids);
-        if(setmealIds != null && setmealIds.size() > 0){
+        if (setmealIds != null && setmealIds.size() > 0) {
             //当前菜品被关联，不能删除
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
         }
@@ -128,12 +131,13 @@ public class DishServiceImpl implements com.sky.service.DishService {
 
     /**
      * 修改菜品
+     *
      * @param dishDTO
      */
     @Override
     public void updateWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
-        BeanUtils.copyProperties(dishDTO,dish);
+        BeanUtils.copyProperties(dishDTO, dish);
 
         //修改菜品表的数据
         dishMapper.updateById(dish);
@@ -142,7 +146,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
         dishFlavorMapper.deleteByDishId(dishDTO.getId());
         //重新插入口味表数据
         List<DishFlavor> flavors = dishDTO.getFlavors();
-        if(flavors != null && flavors.size() >0){
+        if (flavors != null && flavors.size() > 0) {
             flavors.forEach(dishFlavor -> {
                 dishFlavor.setDishId(dishDTO.getId());
             });
@@ -154,6 +158,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
 
     /**
      * 条件查询菜品和口味
+     *
      * @param dish
      * @return
      */
@@ -164,7 +169,7 @@ public class DishServiceImpl implements com.sky.service.DishService {
 
         for (Dish d : dishList) {
             DishVO dishVO = new DishVO();
-            BeanUtils.copyProperties(d,dishVO);
+            BeanUtils.copyProperties(d, dishVO);
 
             //根据菜品id查询对应的口味
             List<DishFlavor> flavors = dishFlavorMapper.getById(d.getId());
@@ -174,5 +179,20 @@ public class DishServiceImpl implements com.sky.service.DishService {
         }
 
         return dishVOList;
+    }
+
+    /**
+     * 菜品的起售停售
+     *
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Dish dish = Dish.builder()
+                .status(status)
+                .id(id)
+                .build();
+        dishMapper.startOrStop(dish);
     }
 }
