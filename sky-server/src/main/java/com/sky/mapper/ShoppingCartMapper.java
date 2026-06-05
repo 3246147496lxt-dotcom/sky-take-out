@@ -1,13 +1,7 @@
 package com.sky.mapper;
 
-import com.sky.annotation.AutoFill;
-import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.ShoppingCart;
-import com.sky.enumeration.OperationType;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -31,8 +25,20 @@ public interface ShoppingCartMapper {
 
     /**
      * 根据id修改商品数量
-     * @param cart
+     * @param shoppingCart
      */
     @Update("update shopping_cart set number = #{number} where id = #{id}")
     void updateByNumber(ShoppingCart cart);
+
+    /**
+     * 删除购物车中的一个商品
+     * @param shoppingCart
+     */
+    void deleteCart(ShoppingCart shoppingCart);
+
+    /**
+     * 清空购物车
+     */
+    @Delete("delete from shopping_cart where user_id = #{userId}")
+    void deleteAllCart(Long userId);
 }
