@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
@@ -10,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,6 +106,17 @@ public class DishController {
         cleanCache("dish_*");
 
         return Result.success();
+    }
+
+    /**
+     * 根据categoryId查询菜品
+     */
+    @GetMapping("/list")
+    @Cacheable(cacheNames = "dish", key = "#categoryId")
+    public Result<List<Dish>> getDishByCategoryId(@RequestParam Long categoryId){
+        log.info("根据categoryId查询菜品:{}", categoryId);
+        List<Dish> dishes = dishService.getDishByCategoryId(categoryId);
+        return Result.success(dishes);
     }
 
     /**

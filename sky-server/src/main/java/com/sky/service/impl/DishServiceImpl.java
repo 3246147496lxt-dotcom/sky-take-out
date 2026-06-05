@@ -195,4 +195,15 @@ public class DishServiceImpl implements com.sky.service.DishService {
                 .build();
         dishMapper.startOrStop(dish);
     }
+
+    /**
+     * 根据categoryId查询菜品
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Dish> getDishByCategoryId(Long categoryId) {
+        List<Dish> dishes = dishMapper.getDishByCategoryId(categoryId);
+        return dishes;
+    }
 }
