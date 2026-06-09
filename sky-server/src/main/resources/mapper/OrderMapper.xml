@@ -15,4 +15,71 @@
 
     </insert>
 
+    <update id="update" parameterType="com.sky.entity.Orders">
+        update orders
+        <set>
+            <if test="cancelReason != null and cancelReason!='' ">
+                cancel_reason=#{cancelReason},
+            </if>
+            <if test="rejectionReason != null and rejectionReason!='' ">
+                rejection_reason=#{rejectionReason},
+            </if>
+            <if test="cancelTime != null">
+                cancel_time=#{cancelTime},
+            </if>
+            <if test="payStatus != null">
+                pay_status=#{payStatus},
+            </if>
+            <if test="payMethod != null">
+                pay_method=#{payMethod},
+            </if>
+            <if test="checkoutTime != null">
+                checkout_time=#{checkoutTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="deliveryTime != null">
+                delivery_time = #{deliveryTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="page" resultType="com.sky.entity.Orders">
+            SELECT * FROM orders
+            <where>
+                <!-- 订单号 模糊查询 -->
+                <if test="number != null and number != ''">
+                    AND number LIKE CONCAT('%', #{number}, '%')
+                </if>
+
+                <!-- 手机号 精确/模糊都可以，我给你写精确 -->
+                <if test="phone != null and phone != ''">
+                    AND phone = #{phone}
+                </if>
+
+                <!-- 订单状态 -->
+                <if test="status != null">
+                    AND status = #{status}
+                </if>
+
+                <!-- 用户ID -->
+                <if test="userId != null">
+                    AND user_id = #{userId}
+                </if>
+
+                <!-- 开始时间 -->
+                <if test="beginTime != null">
+                    AND order_time &gt;= #{beginTime}
+                </if>
+
+                <!-- 结束时间 -->
+                <if test="endTime != null">
+                    AND order_time &lt;= #{endTime}
+                </if>
+            </where>
+            order by order_time desc
+    </select>
+
 </mapper>
