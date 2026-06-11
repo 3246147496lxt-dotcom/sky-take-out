@@ -102,4 +102,15 @@ public class OrderController {
         PageResult pageResult = orderService.historyOrders(ordersPageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 客户催单
+     */
+    @GetMapping("/reminder/{id}")
+    public Result reminder(@PathVariable("id") Long id){
+        log.info("客户催单：{}", id);
+        orderService.reminder(id);
+        return Result.success();
+
+    }
 }

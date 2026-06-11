@@ -397,6 +397,20 @@ public class OrderServiceImpl implements OrderService {
         return orderStatisticsVO;
     }
 
+    /**
+     * 用户催单
+     * @param id
+     */
+    public void reminder(Long id) {
+        String number = orderMapper.getById(id).getNumber();
+        Map map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", id);
+        map.put("content", "订单号：" + number);
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
+    }
+
     //判断当前订单是否被取消
     private Orders UncanceledOrders(Long id){
         Orders orders = orderMapper.getById(id);
